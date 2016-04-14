@@ -1,0 +1,6 @@
+13:17:47 **** Incremental Build of configuration Debug for project mergesort ****
+make all 
+make: Nothing to be done for `all'.
+
+13:17:47 Build Finished (took 67ms)
+

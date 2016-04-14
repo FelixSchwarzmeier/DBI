@@ -1,0 +1,15 @@
+13:17:41 **** Build of configuration Debug for project mergesort ****
+make all 
+Building file: ../src/mergesort.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/mergesort.d" -MT"src/mergesort.o" -o "src/mergesort.o" "../src/mergesort.cpp"
+Finished building: ../src/mergesort.cpp
+ 
+Building target: mergesort
+Invoking: MacOS X C++ Linker
+g++  -o "mergesort"  ./src/mergesort.o   
+Finished building target: mergesort
+ 
+13:17:47 **** Incremental Build of configuration Debug for project mergesort ****
+make all 
+make: Nothing to be done for `all'.
