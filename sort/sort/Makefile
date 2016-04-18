@@ -1,5 +1,5 @@
-test: test.o mergesort.o
-	g++ -o test test.o mergesort.o
+sort: test.o mergesort.o
+	g++ -o sort test.o mergesort.o
 
 test.o: test.cpp
 	g++ -c test.cpp
@@ -7,7 +7,7 @@ test.o: test.cpp
 mergesort.o: mergesort.cpp mergesort.hpp
 	g++ -c mergesort.cpp
 
-all: test ;
+all: sort ;
 
 clean:
 	# -f so this will succeed even if the files don't exist

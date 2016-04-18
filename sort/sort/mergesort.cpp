@@ -1,221 +1,176 @@
 //
 //  mergesort.cpp
-//  test
+//  sort
 //
 //  Created by Julia Kindelsberger on 16/04/16.
 //  Copyright © 2016 Julia Kindelsberger. All rights reserved.
 //
 
 #include "mergesort.hpp"
-
 #include <iostream>
 #include <stdio.h>
-
 #include <unistd.h>
 #include <algorithm>
 #include <fcntl.h>
 #include <iostream>
 #include <queue>
 
-
 #define DEBUG 1
 
 using namespace std;
 
-struct mergeItem {
-    uint64_t value;
-    uint64_t srcIndex;
-    
-    bool operator < (const mergeItem& a) const {
-        return a.value < value;
-    }
-};
+/* Algorithm example:
+ 1. Read 100 MB of the data in main memory and sort by some conventional method, like quicksort.
+ 2. Write the sorted data to disk.
+ 3. Repeat steps 1 and 2 until all of the data is in sorted 100 MB chunks (there are 900MB / 100MB = 9 chunks), which now need to be merged into one single output file.
+ 4. Read the first 10 MB (= 100MB / (9 chunks + 1)) of each sorted chunk into input buffers in main memory and allocate the remaining 10 MB for an output buffer. (In practice, it might provide better performance to make the output buffer larger and the input buffers slightly smaller.)
+ 5. Perform a 9-way merge and store the result in the output buffer. Whenever the output buffer fills, write it to the final sorted file and empty it. Whenever any of the 9 input buffers empties, fill it with the next 10 MB of its associated 100 MB sorted chunk until no more data from the chunk is available. This is the key step that makes external merge sort work externally -- because the merge algorithm only makes one pass sequentially through each of the chunks, each chunk does not have to be loaded completely; rather, sequential parts of the chunk can be loaded as needed.*/
 
 template <typename T>
 struct fileBuffer {
-    FILE*    srcFile;
-    T*       buffer;
+    FILE*   sourceFile;
+    T*      buffer;
     uint64_t length;
     uint64_t index;
 };
 
-/* 1. Read as much data as will fit into an array memory.
- 2. Sort it.
- 3. Write it out to a temporary file (keeping track of name and size and largest record, etc).
- 4. Go back to step 1 until you reach the end of the data.
- 5. Set up a merge tree for the files written so that you do the minimum of merges.
- 6. Read a line from each of the first (only?) merge phase input files.
- 7. Write the smallest (for an ascending sort) to the next temporary file (or the final file).
- 8. Get a new record to replace the one just written.
- 9. Go back to step 7 until there is no more data to read.
- 10. Go back to step 6 to continue the merge until you're done.*/
+struct mergeElement {
+    uint64_t value;
+    uint64_t srcIndex;
+    bool operator < (const mergeElement& a) const {
+        return a.value < value;
+    }
+};
 
 void externalSort(int fdInput, uint64_t size, int fdOutput, uint64_t memSize) {
-    if(size == 0) {
-        cerr << "Size is 0!" << endl;
-        return;
+    
+    // check if values are valid
+    if(size == 0){
+        cerr << "Number of elements is 0!" << endl;
     }
     
     if(memSize < sizeof(uint64_t)) {
-        cerr << "You need more memory for sorting!" << endl;
-        return;
+        cerr << "Memory size is too small!" << endl;
     }
     
+    const uint64_t chunkSize = min(memSize / sizeof(uint64_t), size); // number of values in one chunk
+    const uint64_t numberOfChunks = (size + chunkSize-1) / chunkSize; // number of chunks
+    vector<FILE*> filesForChunks;
+    vector<uint64_t> arrayMemory;
     
-    
-    // how many values fit into one chunk
-    const uint64_t chunkSize = min(memSize / sizeof(uint64_t), size);
-    
-    // number of chunks we must split the input into
-    const uint64_t numChunks = (size + chunkSize-1) / chunkSize;
-    
-    //if(chunkSize == 0)
-    
-#ifdef DEBUG
-    cout << "filesize: " << (size*sizeof(uint64_t)) <<
-    " B, memSize: " << memSize <<
-    " B, chunkSize: " << chunkSize << ", numChunks: " << numChunks << endl;
-#endif
-    
-    vector<FILE*> chunkFiles;
-    chunkFiles.reserve(numChunks);
-    
-    vector<uint64_t> memBuf;
-    memBuf.resize(chunkSize);
+    filesForChunks.reserve(numberOfChunks);
+    arrayMemory.resize(chunkSize);
     
     //1. Read as much data as will fit into an array memory.
-    for(uint64_t i=0; i < numChunks; i++) {
-        size_t valuesToRead = chunkSize;
-        if(size - i*chunkSize < valuesToRead) {
-            valuesToRead = size - i*chunkSize;
-            memBuf.resize(valuesToRead);
+    for(uint64_t i=0; i < numberOfChunks; i++) {
+        size_t numberOfValues = chunkSize;
+        if(size - i*chunkSize < numberOfValues) {
+            numberOfValues = size - i * chunkSize;
+            arrayMemory.resize(numberOfValues);
         }
-        size_t bytesToRead = valuesToRead * sizeof(uint64_t);
+        size_t numberOfBytes = numberOfValues * sizeof(uint64_t);
+        cout << "chunk: " << i << "; with numberOfBytes: " << numberOfBytes << endl;
         
-#ifdef DEBUG
-        cout << "chunk #" << i << " bytesToRead: " << bytesToRead << endl;
-#endif
-        
-        if(read(fdInput, &memBuf[0], bytesToRead) != (ssize_t)bytesToRead) {
-            perror("Reading chunk of input failed");
+        if(read(fdInput, &arrayMemory[0], numberOfBytes) != (ssize_t)numberOfBytes) {
+            cerr << "Reading elements from chunk " << i << " failed!" << endl;
             return;
         }
         
         //2. Sort it.
-        sort(memBuf.begin(), memBuf.end());
+        sort(arrayMemory.begin(), arrayMemory.end());
         
         //3. Write it out to a temporary file (keeping track of name and size and largest record, etc).
-        FILE* tmpf = NULL;
-        tmpf = tmpfile();
-        if(tmpf == NULL) {
-            cerr << "Creating a temporary file failed!" << endl;
-            return;
-        }
-        chunkFiles.push_back(tmpf);
+        FILE* tempFile = NULL;
+        tempFile = tmpfile();
         
-        fwrite(&memBuf[0], sizeof(uint64_t), valuesToRead, tmpf);
-        if(ferror(tmpf)) {
-            cerr << "Writing chunk to file failed!" << endl;
-        }
+        filesForChunks.push_back(tempFile);
+        
+        fwrite(&arrayMemory[0], sizeof(uint64_t), numberOfValues, tempFile);
     }
-    
+
     //5. Set up a merge tree for the files written so that you do the minimum of merges.
+    priority_queue<mergeElement> prioQueue;
     
-    // priority queue used for n-way merging values from n chunks
-    priority_queue<mergeItem> queue;
-    
-    // We reuse the already allocated memory from the memBuf and split the
-    // available memory between numChunks chunk buffers and 1 output buffer.
-    const size_t bufSize = chunkSize/(numChunks+1);
-    
-    // input buffers (from chunks)
-    vector<fileBuffer<uint64_t> > inBufs;
-    inBufs.reserve(numChunks);
+    const size_t bufferSize = chunkSize/(numberOfChunks+1);
+  
+    vector<fileBuffer<uint64_t> > inputBuffers;
+    inputBuffers.reserve(numberOfChunks);
     
     //6. Read a line from each of the first (only?) merge phase input files.
-    for(uint64_t i=0; i < numChunks; i++) {
-        fileBuffer<uint64_t> buf = {
-            chunkFiles[i],      /* srcFile */
-            &memBuf[i*bufSize], /* buffer  */
-            bufSize,            /* length  */
-            0                   /* index   */
+    for(uint64_t i=0; i < numberOfChunks; i++) {
+        fileBuffer<uint64_t> buffer = {
+            filesForChunks[i],
+            &arrayMemory[i * bufferSize],
+            bufferSize,
+            0
         };
         
-        rewind(buf.srcFile);
-        if(fread(buf.buffer, sizeof(uint64_t), bufSize, buf.srcFile) != bufSize) {
-            cerr << "Reading values from tmp chunk file #" << i << " failed: ";
-            if(feof(buf.srcFile))
+        rewind(buffer.sourceFile);
+        if(fread(buffer.buffer, sizeof(uint64_t), bufferSize, buffer.sourceFile) != bufferSize) {
+            cerr << "Reading values from temporary file with index" << i << " failed: ";
+            if(feof(buffer.sourceFile))
                 cerr << "unexpected EOF!" << endl;
             else
                 cerr << "unknown error!" << endl;
             return;
         }
         
-        mergeItem mergeItem1;
+        mergeElement mergeElement1;
+        mergeElement1.value = buffer.buffer[0];
+        mergeElement1.srcIndex = i;
+        prioQueue.push(mergeElement1);
         
-        mergeItem1.value = buf.buffer[0];
-        mergeItem1.srcIndex = i;
-        queue.push(mergeItem1);
+        buffer.index++;
+        buffer.length--;
         
-        //queue.push(mergeItem{buf.buffer[0], i});
-        buf.index++;
-        buf.length--;
-        
-        inBufs.push_back(buf);
+        inputBuffers.push_back(buffer);
     }
     
-    // output buffer
-    uint64_t* outBuf = &memBuf[numChunks*bufSize];
+    // buffer for the output
+    uint64_t* outputBuffer = &arrayMemory[numberOfChunks * bufferSize];
     uint64_t outLength = 0;
     
-    while(!queue.empty()) {
-        // put min item in buffer
-        mergeItem top = queue.top();
-        queue.pop();
-        outBuf[outLength] = top.value;
+    // empty queue
+    while(!prioQueue.empty()) {
+        // get min element
+        mergeElement minElement = prioQueue.top();
+        prioQueue.pop();
+        outputBuffer[outLength] = minElement.value;
         outLength++;
         
-        // flush buffer to file, if buffer is full
-        if(outLength == bufSize-1) {
-            if(write(fdOutput, outBuf, outLength*sizeof(uint64_t)) != (ssize_t)(outLength*sizeof(uint64_t)))
-                cerr << "Writing to out file failed!" << endl;
+        // elements to file
+        if(outLength == bufferSize-1) {
+            if(write(fdOutput, outputBuffer, outLength*sizeof(uint64_t)) != (ssize_t)(outLength*sizeof(uint64_t)))
+                cerr << "Writing failed!" << endl;
             outLength = 0;
         }
         
-        // refill input buffer, from which the value was taken
-        // if length == 0 then the chunk was completely read
-        fileBuffer<uint64_t>& srcBuf = inBufs[top.srcIndex];
-        if(srcBuf.length > 0) {
-            mergeItem mergeItem2;
-            mergeItem2.value = srcBuf.buffer[srcBuf.index];
-            mergeItem2.srcIndex = top.srcIndex;
-            queue.push(mergeItem2);
-            //queue.push(mergeItem{srcBuf.buffer[srcBuf.index], top.srcIndex});
-            srcBuf.index++;
-            srcBuf.length--;
-            if(srcBuf.length == 0) {
-#ifdef DEBUG
-                cout << "refilling inBuf #" << top.srcIndex << endl;
-#endif
+        // fill input buffer
+        fileBuffer<uint64_t>& sourceBuffer = inputBuffers[minElement.srcIndex];
+        if(sourceBuffer.length > 0) {
+            mergeElement mergeElement2;
+            mergeElement2.value = sourceBuffer.buffer[sourceBuffer.index];
+            mergeElement2.srcIndex = minElement.srcIndex;
+            prioQueue.push(mergeElement2);
+            sourceBuffer.index++;
+            sourceBuffer.length--;
+            
+            if(sourceBuffer.length == 0) {
+                cout << "Filling input buffer number: " << minElement.srcIndex << endl;
+                sourceBuffer.index = 0;
+                sourceBuffer.length = fread(sourceBuffer.buffer, sizeof(uint64_t), bufferSize, sourceBuffer.sourceFile);
                 
-                srcBuf.index = 0;
-                srcBuf.length = fread(srcBuf.buffer, sizeof(uint64_t), bufSize, srcBuf.srcFile);
-                
-                // Close the file stream when it is completely read
-                if(srcBuf.length < bufSize) {
-                    fclose(srcBuf.srcFile);
-#ifdef DEBUG
-                    cout << "merged all data from chunk #" << top.srcIndex << endl;
-#endif
+                if(sourceBuffer.length < bufferSize) {
+                    fclose(sourceBuffer.sourceFile);
+                    cout << "Merged all data from chunk number: " << minElement.srcIndex << endl;
+                    
                 }
             }
         }
     }
     
-    // flush rest, if output buffer is not already empty
     if(outLength > 0) {
-        if(write(fdOutput, outBuf, outLength*sizeof(uint64_t)) != (ssize_t)(outLength*sizeof(uint64_t)))
-            cerr << "Writing to out file failed!" << endl;
+        if(write(fdOutput, outputBuffer, outLength*sizeof(uint64_t)) != (ssize_t)(outLength*sizeof(uint64_t)))
+            cerr << "Writing failed!" << endl;
     }
 }
-
