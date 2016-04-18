@@ -3465,3 +3465,28 @@ Command-line arguments:  -os macosx -ws cocoa -arch x86_64 -product org.eclipse.
 
 !ENTRY org.eclipse.cdt.core 1 0 2016-04-14 13:17:41.943
 !MESSAGE Indexed 'mergesort' (1 sources, 173 headers) in 7.99 sec: 21,496 declarations; 45,492 references; 0 unresolved inclusions; 24 syntax errors; 61 unresolved names (0.091%)
+!SESSION 2016-04-14 13:27:59.987 -----------------------------------------------
+eclipse.buildId=4.5.2.M20160212-1500
+java.version=1.8.0_60
+java.vendor=Oracle Corporation
+BootLoader constants: OS=macosx, ARCH=x86_64, WS=cocoa, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.cpp.product -keyring /Users/Julia/.eclipse_keyring -showlocation
+Command-line arguments:  -os macosx -ws cocoa -arch x86_64 -product org.eclipse.epp.package.cpp.product -keyring /Users/Julia/.eclipse_keyring -showlocation
+
+!ENTRY org.eclipse.core.net 1 0 2016-04-14 13:28:08.631
+!MESSAGE System property http.nonProxyHosts has been set to local|*.local|169.254/16|*.169.254/16 by an external source. This value will be overwritten using the values from the preferences
+
+!ENTRY org.eclipse.cdt.core 1 0 2016-04-14 13:28:53.989
+!MESSAGE Indexed 'DBI' (1 sources, 173 headers) in 7.27 sec: 21,496 declarations; 45,492 references; 0 unresolved inclusions; 24 syntax errors; 61 unresolved names (0.091%)
+
+!ENTRY org.eclipse.cdt.core 1 0 2016-04-14 13:31:11.862
+!MESSAGE Indexed 'DBI' (0 sources, 0 headers) in 0.001 sec: 0 declarations; 0 references; 0 unresolved inclusions; 0 syntax errors; 0 unresolved names (0%)
+
+!ENTRY org.eclipse.cdt.core 1 0 2016-04-14 13:31:49.731
+!MESSAGE Indexed 'DBI' (1 sources, 173 headers) in 4.39 sec: 21,496 declarations; 45,492 references; 0 unresolved inclusions; 24 syntax errors; 61 unresolved names (0.091%)
+
+!ENTRY org.eclipse.cdt.core 1 0 2016-04-14 13:34:02.878
+!MESSAGE Indexed 'DBI' (0 sources, 0 headers) in 0.001 sec: 0 declarations; 0 references; 0 unresolved inclusions; 0 syntax errors; 0 unresolved names (0%)
+
+!ENTRY org.eclipse.cdt.core 1 0 2016-04-14 13:35:22.310
+!MESSAGE Indexed 'DBI' (0 sources, 0 headers) in 0 sec: 0 declarations; 0 references; 0 unresolved inclusions; 0 syntax errors; 0 unresolved names (0%)
