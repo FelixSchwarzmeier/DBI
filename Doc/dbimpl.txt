@@ -1,0 +1,67 @@
+debugging: g++ -Oo -g
+fast: g++ -03 -g
+
+size = 
+assert(size % 8 ) == 0:
+
+int rest = read(
+
+	if(ret >= 0) {
+	perror(..);
+	throw;
+	}
+)
+
+#Why does a DBMS have a Buffer Manager?
+
+It does not fit into main memory. 
+Why does a DBMS not swap?
+Because you want to control when things are written to disk.
+Swapping does not work well. Swapping is not a practical concept just a theorical one.
+
+Slide : 16
+Latch: tiny lock, for a short amount of time
+Page Number: Identifier
+
+We want to encode the page number and the latch 
+
+this is how you get from the page id to the physical page: offset = S.sizeof(Page)
+
+lsn not implemented 
+
+Data: ByteArray the Frame has a pointer to the memory
+
+Buffer Frames point to another Buffer Frame: Chaining as collision strategy
+
+BufferManager::BufferManager(unsigned pageCount)
+BufferFrame& BufferManager::fixPage(uint64_t pageId, bool exclusive) -> exclusive: you have access to the page exclusively -> writing, you could not change the page then it's not dirty
+void* BufferFrame::getData() -> returns a bytearray, void because it can be cast to anything
+void BufferManager::unfixPage(BufferFrame& frame, bool isDirty); isDirty -> file changed
+BufferManager::~BufferManager() 
+
+Concurrency:
+it should work single-threaded
+
+size of low databases: 4KB - 32KB Postgres - Page Size: 8KB
+big page 64B: seeking will kill you
+small page 1MB: will cause more I/Os
+
+pread
+pwrite
+for reading and writing, they are internally using locks
+
+what do we need to latch? 
+-hashtable latch
+-frame latch read/write multiple readers and one write -> multiple people can call fixPage
+-pthread_rwlock
+
+fixPage: read lock
+
+int pthread_rwlock_rdlock(pthread_rwlock_t *lock); -> fixPage
+
+
+int pthread_rwlock_tryrdlock(pthread_rwlock_t *lock); -> you maybe get a lock
+
+int pthread_rwlock_unlock(pthread_rwlock_t *lock); -> unfix
+
+replacement strategy: whatever wwe want, replacement just if necaccery -> random is fine
