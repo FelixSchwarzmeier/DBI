@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A3251E431CD629A800ACE909 /* Makefile in Sources */ = {isa = PBXBuildFile; fileRef = A3251E421CD629A800ACE909 /* Makefile */; };
+		A3436D781CD23BCD0063E857 /* test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A3436D761CD23BCD0063E857 /* test.cpp */; };
+		A3436D791CD244B80063E857 /* BufferManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A3436D721CD23A5E0063E857 /* BufferManager.cpp */; };
+		A3436D7A1CD244BF0063E857 /* BufferFrame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A3436D741CD23BA20063E857 /* BufferFrame.cpp */; };
 		A3B4F8D01CC535E20022B423 /* Makefile in Sources */ = {isa = PBXBuildFile; fileRef = A3B4F8CB1CC535E20022B423 /* Makefile */; };
 		A3B4F8D11CC535E20022B423 /* mergesort.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A3B4F8CC1CC535E20022B423 /* mergesort.cpp */; };
 		A3B4F8D21CC535E20022B423 /* test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A3B4F8CE1CC535E20022B423 /* test.cpp */; };
@@ -25,6 +29,13 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		A3251E421CD629A800ACE909 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; name = Makefile; path = BufferManager/Makefile; sourceTree = "<group>"; };
+		A3436D721CD23A5E0063E857 /* BufferManager.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = BufferManager.cpp; path = BufferManager/BufferManager.cpp; sourceTree = "<group>"; };
+		A3436D731CD23A5E0063E857 /* BufferManager.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = BufferManager.hpp; path = BufferManager/BufferManager.hpp; sourceTree = "<group>"; };
+		A3436D741CD23BA20063E857 /* BufferFrame.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = BufferFrame.cpp; path = BufferManager/BufferFrame.cpp; sourceTree = "<group>"; };
+		A3436D751CD23BA20063E857 /* BufferFrame.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = BufferFrame.hpp; path = BufferManager/BufferFrame.hpp; sourceTree = "<group>"; };
+		A3436D761CD23BCD0063E857 /* test.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = test.cpp; path = BufferManager/test.cpp; sourceTree = "<group>"; };
+		A3436D771CD23BCD0063E857 /* test.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = test.hpp; path = BufferManager/test.hpp; sourceTree = "<group>"; };
 		A3B4F8C11CC535AB0022B423 /* sort */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = sort; sourceTree = BUILT_PRODUCTS_DIR; };
 		A3B4F8CB1CC535E20022B423 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		A3B4F8CC1CC535E20022B423 /* mergesort.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mergesort.cpp; sourceTree = "<group>"; };
@@ -44,9 +55,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		A3436D711CD238920063E857 /* BufferManager */ = {
+			isa = PBXGroup;
+			children = (
+				A3436D721CD23A5E0063E857 /* BufferManager.cpp */,
+				A3436D731CD23A5E0063E857 /* BufferManager.hpp */,
+				A3436D741CD23BA20063E857 /* BufferFrame.cpp */,
+				A3436D751CD23BA20063E857 /* BufferFrame.hpp */,
+				A3436D761CD23BCD0063E857 /* test.cpp */,
+				A3436D771CD23BCD0063E857 /* test.hpp */,
+				A3251E421CD629A800ACE909 /* Makefile */,
+			);
+			name = BufferManager;
+			sourceTree = "<group>";
+		};
 		A3B4F8B81CC535AB0022B423 = {
 			isa = PBXGroup;
 			children = (
+				A3436D711CD238920063E857 /* BufferManager */,
 				A3B4F8C31CC535AB0022B423 /* sort */,
 				A3B4F8C21CC535AB0022B423 /* Products */,
 			);
@@ -129,7 +155,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				A3B4F8D01CC535E20022B423 /* Makefile in Sources */,
+				A3436D791CD244B80063E857 /* BufferManager.cpp in Sources */,
+				A3436D781CD23BCD0063E857 /* test.cpp in Sources */,
+				A3436D7A1CD244BF0063E857 /* BufferFrame.cpp in Sources */,
 				A3B4F8D21CC535E20022B423 /* test.cpp in Sources */,
+				A3251E431CD629A800ACE909 /* Makefile in Sources */,
 				A3B4F8D11CC535E20022B423 /* mergesort.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -251,6 +281,7 @@
 				A3B4F8CA1CC535AB0022B423 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
