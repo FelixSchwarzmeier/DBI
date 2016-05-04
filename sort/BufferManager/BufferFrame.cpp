@@ -1,92 +1,97 @@
 //
 //  BufferFrame.cpp
-//  sort
+//
 //
 //  Created by Julia Kindelsberger on 25/04/16.
 //  Copyright © 2016 Julia Kindelsberger. All rights reserved.
 //
 
-#include "BufferFrame.hpp"
-#include <stdint.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <pthread.h>
-#include <stdint.h>
-#include <assert.h>
-#include <stdio.h>
-#include <stdint.h>
 #include <iostream>
+#include <pthread.h>
+#include <unistd.h>
 
+#include "BufferFrame.hpp"
 
-const size_t blocksize = 8 * 1024;
+//#define DEBUG
 
-BufferFrame::BufferFrame(uint64_t pageId, int fd){
-    pthread_rwlock_init(&rwlock, NULL);
-    
+const size_t blocksize = 1024 * 8;
+
+BufferFrame::BufferFrame(int segmentFd, uint64_t pageId) {
+    isNewlyCreated = true;
+    isDirty = false;
+    isClean = false;
     pageIdentification = pageId;
     data = NULL;
-    state  = state_t::New;
-    offset = blocksize * (pageId & 0x0000FFFFFFFFFFFF);
-    fileDescriptor = fd;
+    offset = blocksize * (pageId& 0x0000ffffffffffff);
+    fileDescriptor = segmentFd;
+    previousFrame = NULL;
+    nextFrame = NULL;
+    users = 0;
+    // init the lock
+    pthread_rwlock_init(&lock, NULL);
     
-    prev = next = NULL;
-    currentUsers = 0;
-    
-    std::cout << "Buffer Frame created" << std::endl;
-
+    //std::cout << "BufferFrame created" << std::endl;
 }
 
 BufferFrame::~BufferFrame() {
-    lockFrame(true); // get exclusive lock / wait until all tasks are finished
-    pthread_rwlock_destroy(&rwlock);
+     // destroy lock
+    pthread_rwlock_destroy(&lock);
+
+    writeDataToDisk();
+
+    free(data);
     
-    // write modified data back to disk
-    writeChanges();
-    
-    // deallocate data, if necessary
-    if (data != NULL) {
-        free(data);
-        data = NULL;
-    }
-    
-    std::cout << "Buffer Frame destroyed" << std::endl;
+    //std::cout << "BufferFrame destroyed" << std::endl;
+
 }
 
 // A buffer frame should offer a method giving access to the buffered page. Except for the buffered page, BufferFrame objects can also store control information (page ID, dirtyness, ...).
 void* BufferFrame::getData() {
-    
-    // in-memory buffer
-    data = malloc(blocksize);
-
-    if (data != NULL) {
+    //std::cout << "BufferFrame getData" << std::endl;
+    // load data, if not already loaded
+    if (isNewlyCreated) {
         
-    // read data from file to buffer
-    pread(fileDescriptor, data, blocksize, offset);
+        data = malloc(blocksize);
         
-    state = state_t::Clean;
-    
-    std::cout << "Buffer Frame getData " << data << std::endl;
-    
-         }
-    else {
-        std::cerr << "data is null" << std::endl;
+        // read the data
+        pread(fileDescriptor, data, blocksize, offset);
+        
+        isNewlyCreated = false;
+        isClean = true;
+        isDirty = false;
     }
+    
     return data;
 }
 
-void BufferFrame::writeChanges() {
-    std::cout << "Buffer Frame writeChanges" << std::endl;
-    // write data to disk if it is dirty
-    if (state == state_t::Dirty) {
+void BufferFrame::writeDataToDisk() {
+    // write the data to the disk if dirty
+    if (isDirty) {
         pwrite(fileDescriptor, data, blocksize, offset);
-        state = state_t::Clean;
+        
+        isClean = true;
+        isDirty = false;
+        isNewlyCreated = false;
+        
     }
 }
 
 void BufferFrame::lockFrame(bool exclusive) {
-    std::cout << "Buffer Frame lock. exclusive: " << exclusive  << std::endl;
-    if (exclusive)
-        pthread_rwlock_wrlock(&rwlock);
-    else
-        pthread_rwlock_rdlock(&rwlock);
+    if (exclusive) {
+        pthread_rwlock_wrlock(&lock);
+    }
+    else {
+        pthread_rwlock_rdlock(&lock);
+    }
 }
+
+void BufferFrame::unlockFrame() {
+    pthread_rwlock_unlock(&lock);
+}
+
+void BufferFrame::setDirty() {
+    isDirty = true;
+    isNewlyCreated = false;
+    isClean = false;
+}
+

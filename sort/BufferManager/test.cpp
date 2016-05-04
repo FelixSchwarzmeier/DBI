@@ -1,5 +1,3 @@
-
-#include "test.hpp"
 #include <iostream>
 #include <vector>
 #include <stdlib.h>
@@ -125,7 +123,7 @@ int main(int argc, char** argv) {
         cout << "test successful" << endl;
         delete bm;
         return 0;
-    } else {
+    } else { // error: expected 7683 but got 1 error: expected 7925 but got 1
         cerr << "error: expected " << totalCount << " but got " << totalCountOnDisk << endl;
         delete bm;
         return 1;

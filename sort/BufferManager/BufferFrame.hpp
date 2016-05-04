@@ -1,55 +1,41 @@
 //
 //  BufferFrame.hpp
-//  sort
+//
 //
 //  Created by Julia Kindelsberger on 25/04/16.
 //  Copyright © 2016 Julia Kindelsberger. All rights reserved.
 //
-
 #ifndef BufferFrame_hpp
 #define BufferFrame_hpp
 
-#include <stdio.h>
-#include <stdint.h>
-#include <pthread.h>
-#include <iostream>
-
-enum state_t {
-    New,   // no data loaded
-    Clean, // data loaded and no data changed
-    Dirty  // data loaded and changed
-};
-
 class BufferFrame {
     
-    public:
+  public:
+    BufferFrame(int fileDescriptor, uint64_t pageId);
+    ~BufferFrame();
     
-    BufferFrame(uint64_t pageId, int fileDescriptor);
-     ~BufferFrame();
-    void* getData();
-    uint64_t pageIdentification;
-    // offset in the segment file
-    off_t offset;
+    uint64_t pageIdentification; // 64 bit, 16 bit segment id
     void* data;
+    off_t offset;
     int fileDescriptor;
-    void setDirty() {
-        std::cout << "Buffer Frame setDirty" << std::endl;
-        state = state_t::Dirty; }
     
-    // the state of the page
-    state_t state;
-    void writeChanges();
+    bool isDirty;
+    void setDirty();
+    bool isClean; // loaded but not changed
+    bool isNewlyCreated;
     
-    BufferFrame* prev;
-    BufferFrame* next;
-    unsigned currentUsers;
+    // pointer linked list frames
+    BufferFrame* previousFrame;
+    BufferFrame* nextFrame;
+    
+    unsigned users;
+    
+    void* getData();
+    void writeDataToDisk();
+    
     void lockFrame(bool exclusive);
-    pthread_rwlock_t rwlock;
-    
-    void unlockFrame() {
-        std::cout << "Buffer Frame unlock" << std::endl;
-        pthread_rwlock_unlock(&rwlock);
-    }
+    void unlockFrame();
+    pthread_rwlock_t lock;
 
 };
 
