@@ -1,6 +1,8 @@
 #ifndef H_SPSegment_HPP
 #define H_SPSegment_HPP
 
+#include <map>
+
 #include "BufferManager.hpp"
 
 #include "Tid.hpp"
@@ -13,63 +15,36 @@ class SPSegment {
 private:
     BufferManager bm;
     
-    std::map<unsigned, SlottedPages> spm;
+    std::map<unsigned, SlottedPage> spm;
     
     unsigned pageIdCounter;
-    unsigned createPageId() {
-        return pageIdCounter++;
-    }
+    unsigned createPageId();
     
 
     //Passende Seite finden, wird beim insert benötigt
-    SlottedPages& getFittingPage(unsigned len) {
-        //Suche nach passender Page
-        for( SlottedPages& sp : spm ) {
-            if( sp.freeSpace >= len ) {
-                return sp;
-            }
-        }
-        //Keine freie Page gefunden, es wird eine neue geholt;
-        unsigned pI = createPageId();
-        spm[pI] = SlottedPage(bm);
-        return spv[pI];
-    }
+    SlottedPage& getFittingPage(unsigned len);
     
     
     //depreciated?
-    getSlot(BufferManager& bm){
+    /*getSlot(BufferManager& bm){
         BufferFrame& bf = bm.fix(pageId, false);
         char* data = bf.getdata();
-    }
+    }*/
 
 public:
-    SPSegment( BufferManager& bm) : bm(bm) {
-        pageIdCounter = 0;
-    }
+    SPSegment( BufferManager& bm);
 
     
     //Insert a Record
-    TID insert(const Record& r) {
-        SlottedPage& sp = getFittingPage(r.getLen());
-        unsigned slotId = sp.insert(r);
-        return TID(sp.pageId, slotId);
-    }
+    TID insert(const Record& r);
     
     //Stupid Solution
-    bool SPSegment::remove(TID tid) {
-        return spm[tid.pageId].remove(tid);
-    }
+    bool remove(TID tid);
     
-    Record SPSegment::lookup(TID tid) {
-        return spm[tid.pageId].lookup(tid);
-    }
+    Record lookup(TID tid);
     
     //TBD
-    bool SPSegment::update(TID tid, const Record& r) {
-        //remove(tid);
-        //insert()
-        return true;
-    }
+    bool update(TID tid, const Record& r);
     
     
 };

@@ -11,14 +11,14 @@ BufferManager.o: BufferManager.cpp BufferFrame.hpp
 BufferFrame.o: BufferFrame.cpp
 	g++ -c -std=c++11 BufferFrame.cpp
 	
-SlottedPage.o: SlottedPage.hpp
-	g++ -c -std=c++11 SlottedPage.hpp
+SlottedPage.o: SlottedPage.hpp SlottedPage.cpp
+	g++ -c -std=c++11 SlottedPage.hpp SlottedPage.cpp
 	
-SPSegment.o: SPSegment.hpp
-	g++ -c -std=c++11 SPSegment.hpp
+SPSegment.o: SPSegment.hpp SPSegment.cpp
+	g++ -c -std=c++11 SPSegment.hpp SPSegment
 
-Tid.o: Tid.hpp
-	g++ -c -std=c++11 Tid.hpp
+Tid.o: Tid.hpp Tid.cpp
+	g++ -c -std=c++11 Tid.hpp Tid.cpp
 	
 Relation.o: Relation.hpp
 	g++ -c -std=c++11 Relation.hpp

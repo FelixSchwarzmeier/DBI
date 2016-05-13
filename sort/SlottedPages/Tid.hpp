@@ -1,5 +1,5 @@
-#ifndef H_SPSegment_HPP
-#define H_SPSegment_HPP
+#ifndef H_TID_HPP
+#define H_TID_HPP
 
 
 
@@ -7,16 +7,11 @@ class TID {
     unsigned pageId;
     unsigned slotId;
     
-    TID(unsigned pageId, unsigned slotId) : pageId(pageId), slotId(slotId) {
-    }
-    
-    unsigned getPageId() {
-        return pageId;
-    }
-    unsigned getSlotId() {
-        return pageId;
-    }
-    
+    public:
+        TID(unsigned pageId, unsigned slotId);
+        
+        unsigned getPageId();
+        unsigned getSlotId();
 };
 
 
