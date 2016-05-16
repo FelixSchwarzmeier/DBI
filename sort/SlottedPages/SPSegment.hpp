@@ -15,10 +15,10 @@ class SPSegment {
 private:
     BufferManager bm;
     
-    std::map<unsigned, SlottedPage> spm;
+    std::map<uint64_t, SlottedPage> spm;
     
-    unsigned pageIdCounter;
-    unsigned createPageId();
+    uint64_t pageIdCounter;
+    uint64_t createPageId();
     
 
     //Passende Seite finden, wird beim insert benötigt

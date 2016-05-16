@@ -1,13 +1,39 @@
-#include "SlottedPage.cpp"
+#include "SlottedPage.hpp"
 
 #include "Tid.hpp"
 #include "BufferManager.hpp"
 
-SlottedPage( BufferManager& bm, unsigned pageId) : bm(bm), pageId(pageId) {        
-    };
+#include <cstdlib>
+#include <iostream>
+
+SlottedPage::SlottedPage( BufferManager& bm, uint64_t pageId) : bm(bm), pageId(pageId) {        
+    }
+    
+SlottedPage::SlottedPage() {
+    bm = BufferManager(100);
+    std::cout << "SlottedPage Constrcutor called ohne Argumente" << std::endl;
+}
     
     
-unsigned SlottedPage::insert( BufferManager& bm, Record& rec ) {
+uint64_t SlottedPage::getPageId() {
+    return pageId;
+}
+//Removing all the Spaces from a Page
+void SlottedPage::arrangePage() {
+    BufferFrame bf = bm.fixPage(pageId, false); //vll. true?
+    void* data = bf.getData();
+    
+    int moveBack = 0;
+    for( int i = 0; i < freeSpaces.size(); i++ ) {
+        memcpy(data + freeSpaces[i].offset + freeSpaces[i].length - moveBack, data + freeSpaces[i].offset - moveBack, 8*1024-freeSpaces[i].offset);
+        moveBack += freeSpaces[i].length;
+    }
+    
+    bm.unfixPage(bf, true);
+}
+    
+    
+unsigned SlottedPage::insert( const Record& rec ) {
     BufferFrame bf = bm.fixPage(pageId, false);//vll true?
     void* data = bf.getData();
     
@@ -18,6 +44,7 @@ unsigned SlottedPage::insert( BufferManager& bm, Record& rec ) {
         hdr->firstFreeSlot = sizeof(Header);
         hdr->dataStart = 8*1024;
         hdr->freeSpace = 8*1024-sizeof(Header);
+        hdr->spaceByArrangement = 0;
     }
     
     
@@ -38,25 +65,39 @@ unsigned SlottedPage::insert( BufferManager& bm, Record& rec ) {
     memcpy(data+slot->offset, rec.getData(), rec.getLen());
     
     bm.unfixPage(bf, true);
+    
+    return hdr->firstFreeSlot;
 }
 
 //Needs to be improved
 bool SlottedPage::remove(TID tid) {
-    BufferFrame bf = bm.fixPage(tid.getPageid, false); //vll. true?
-    char* data = bf.getData();
+    BufferFrame bf = bm.fixPage(tid.pageId, false); //vll. true?
+    void* data = bf.getData();
     
-    Slot* s = (Slot*)(data + sizeof(Header)) + tid.getSlotId;
-    s.offset = 0;
-    s.length = 0;
+    Slot* s = (Slot*)(data + sizeof(Header)) + tid.slotId;
+    freeSpaces.push_back(*s);//Save free part so rearrange page later on
+    s->offset = 0;
+    s->length = 0;
+    bm.unfixPage(bf, true);
+    
     return true;
 }
 
-Record& SlottedPage::lookup( BufferManager& bm, TID tid ) {
-    BufferFrame bf& = bm.fixPage(tid.getPageid, false);
-    char* data = bf.getData();
+Record SlottedPage::lookup( TID tid ) {
+    BufferFrame bf = bm.fixPage(tid.pageId, false);
+    void* data = bf.getData();
     
     Slot* s = (Slot*)(data + sizeof(Header)) + tid.slotId;
-    //Noch nicht ganz safe, erst kopieren, dann friegeben!
-    bm.unfix(pageId, false);
-    return *((Record*)(data+s->offset));
+    
+    
+    Record* ret = (Record*)(data+s->offset);
+    
+    Record* rec = static_cast<Record*>(malloc(ret->getLen()));
+    memcpy(rec, ret, ret->getLen());
+    
+    
+    
+    
+    bm.unfixPage(bf, false);
+    return Record(rec->getLen(), rec->getData());
 }

@@ -1,11 +1,12 @@
 #include "Tid.hpp"
 
-TID::TID(unsigned pageId, unsigned slotId) : pageId(pageId), slotId(slotId) {
+/*TID::TID(uint64_t pageId, unsigned slotId) : pageId(pageId), slotId(slotId) {
 }
 
-unsigned TID::getPageId() {
+uint64_t TID::getPageId() {
     return pageId;
 }
 unsigned TID::getSlotId() {
     return pageId;
 }
+*/

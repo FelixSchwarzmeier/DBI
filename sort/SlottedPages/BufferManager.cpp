@@ -29,6 +29,10 @@ BufferManager::BufferManager(size_t pageCount) {
     //std::cout << "BufferManager created" << std::endl;
 }
 
+BufferManager::BufferManager() {
+    BufferManager(100);
+}
+
 // Destructor. Write all dirty frames to disk and free all resources.
 BufferManager::~BufferManager() {
     

@@ -1,24 +1,32 @@
 #include "SPSegment.hpp"
 
+#include "SlottedPage.hpp"
 
-
-unsigned SPSegment::createPageId() {
+uint64_t SPSegment::createPageId() {
         return pageIdCounter++;
 }
     
 
 //Passende Seite finden, wird beim insert benötigt
-SlottedPages& SPSegment::getFittingPage(unsigned len) {
+SlottedPage& SPSegment::getFittingPage(unsigned len) {
     //Suche nach passender Page
-    for( SlottedPages& sp : spm ) {
-        if( sp.freeSpace >= len ) {
-            return sp;
+    for( auto& sp : spm ) {
+        //Page genug Platz?
+        Header* hdr = (Header*) &sp.second;
+        if( hdr->freeSpace >= len ) {
+            return sp.second;
         }
+        //Page genug Platz bei rearangement?
+        else if ( hdr->freeSpace + hdr->spaceByArrangement >= len ) {
+            sp.second.arrangePage();
+            return sp.second;
+        }
+        
     }
     //Keine freie Page gefunden, es wird eine neue geholt;
-    unsigned pI = createPageId();
-    spm[pI] = SlottedPage(bm);
-    return spv[pI];
+    uint64_t pI = createPageId();
+    spm[pI] = SlottedPage(bm, pI);
+    return spm[pI];
 }
     
     
@@ -37,7 +45,7 @@ SlottedPages& SPSegment::getFittingPage(unsigned len) {
     TID SPSegment::insert(const Record& r) {
         SlottedPage& sp = getFittingPage(r.getLen());
         unsigned slotId = sp.insert(r);
-        return TID(sp.pageId, slotId);
+        return TID(sp.getPageId(), slotId);
     }
     
     //Stupid Solution

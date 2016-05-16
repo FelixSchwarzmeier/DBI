@@ -8,14 +8,14 @@
 #include <unordered_map>
 
 #include "DBMS.hpp" // include your stuff here
-#include "Record.hpp"
+//#include "Record.hpp"
 
 using namespace std;
 
 // todo: adapt to your implementation
 uint64_t extractPage(TID tid) {
    //return tid >> 16;
-    return tid.getPageId();
+    return tid.pageId;
 }
 
 const unsigned initialSize = 100; // in (slotted) pages

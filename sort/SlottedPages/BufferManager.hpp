@@ -19,6 +19,7 @@ class BufferManager {
   public:
 
     BufferManager(size_t pageCount);
+    BufferManager();
     ~BufferManager();
     
     size_t pC;

@@ -1,8 +1,8 @@
 
-BufferManager: test.o BufferManager.o BufferFrame.o SlottedPage.o SPSegment.o Tid.o Relation.o Record.o
-	g++ -o BufferManager test.o BufferManager.o BufferFrame.o SlottedPage.o SPSegment.o Relation.o Record.o
+SlottedPage: slottedTest.o BufferManager.o BufferFrame.o SlottedPage.o SPSegment.o Tid.o Record.o
+	g++ -o SlottedPage slottedTest.o BufferManager.o BufferFrame.o SlottedPage.o SPSegment.o Tid.o Record.o
 
-test.o: slottedTest.cpp
+slottedTest.o: slottedTest.cpp
 	g++ -c -std=c++11 slottedTest.cpp
 
 BufferManager.o: BufferManager.cpp BufferFrame.hpp
@@ -15,22 +15,19 @@ SlottedPage.o: SlottedPage.hpp SlottedPage.cpp
 	g++ -c -std=c++11 SlottedPage.hpp SlottedPage.cpp
 	
 SPSegment.o: SPSegment.hpp SPSegment.cpp
-	g++ -c -std=c++11 SPSegment.hpp SPSegment
+	g++ -c -std=c++11 SPSegment.hpp SPSegment.cpp
 
-Tid.o: Tid.hpp Tid.cpp
-	g++ -c -std=c++11 Tid.hpp Tid.cpp
-	
-Relation.o: Relation.hpp
-	g++ -c -std=c++11 Relation.hpp
-	
-Record.o: Record.hpp
-	g++ -c -std=c++11 Record.hpp
+Tid.o: Tid.hpp
+	g++ -c -std=c++11 Tid.hpp
+
+Record.o: Record.hpp Record.cpp
+	g++ -c -std=c++11 Record.hpp Record.cpp
 	
 all:
-	BufferManager;
+	SlottedPage;
 
 clean:
-	rm -f test test.o
+	rm -f slottedTest slottedTest.o
 
 
 
