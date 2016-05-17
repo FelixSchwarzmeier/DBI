@@ -15,7 +15,7 @@ class SPSegment {
 private:
     BufferManager bm;
     
-    std::map<uint64_t, SlottedPage> spm;
+    std::map<uint64_t, SlottedPage*> spm;
     
     uint64_t pageIdCounter;
     uint64_t createPageId();

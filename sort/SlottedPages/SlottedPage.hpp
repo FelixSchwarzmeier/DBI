@@ -28,7 +28,7 @@ class Slot {
 class SlottedPage {
     
 private:
-    
+    bool newPage;
     
     uint64_t pageId;
     BufferManager bm;
@@ -41,7 +41,7 @@ public:
     //Records
     
     
-    SlottedPage();
+    //SlottedPage();
     SlottedPage( BufferManager& bm, uint64_t pageId);
     
     void arrangePage();
@@ -54,6 +54,12 @@ public:
     bool remove(TID tid);
     
     Record lookup( TID tid );
+    
+    TID getDest(TID tid);
+    
+    bool final(TID tid);
+    
+    bool createVerweis(TID tid, TID newTID );
     
     
     

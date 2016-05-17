@@ -2,6 +2,8 @@
 
 #include "SlottedPage.hpp"
 
+#include <iostream>
+
 uint64_t SPSegment::createPageId() {
         return pageIdCounter++;
 }
@@ -12,21 +14,21 @@ SlottedPage& SPSegment::getFittingPage(unsigned len) {
     //Suche nach passender Page
     for( auto& sp : spm ) {
         //Page genug Platz?
-        Header* hdr = (Header*) &sp.second;
+        Header* hdr = (Header*) sp.second;
         if( hdr->freeSpace >= len ) {
-            return sp.second;
+            return *sp.second;
         }
         //Page genug Platz bei rearangement?
         else if ( hdr->freeSpace + hdr->spaceByArrangement >= len ) {
-            sp.second.arrangePage();
-            return sp.second;
+            sp.second->arrangePage();
+            return *sp.second;
         }
         
     }
     //Keine freie Page gefunden, es wird eine neue geholt;
     uint64_t pI = createPageId();
-    spm[pI] = SlottedPage(bm, pI);
-    return spm[pI];
+    spm[pI] = new SlottedPage(bm, pI);
+    return *spm[pI];
 }
     
     
@@ -43,6 +45,7 @@ SlottedPage& SPSegment::getFittingPage(unsigned len) {
     
     //Insert a Record
     TID SPSegment::insert(const Record& r) {
+        std::cout << "Insert SPSegment" << std::endl;
         SlottedPage& sp = getFittingPage(r.getLen());
         unsigned slotId = sp.insert(r);
         return TID(sp.getPageId(), slotId);
@@ -50,16 +53,37 @@ SlottedPage& SPSegment::getFittingPage(unsigned len) {
     
     //Stupid Solution
     bool SPSegment::remove(TID tid) {
-        return spm[tid.pageId].remove(tid);
+        //TID Verweis finden und dann drauf arbeiten
+        TID run = spm[tid.pageId]->getDest(tid);
+        while( spm[run.pageId]->final(run) ) {
+            run = spm[run.pageId]->getDest(run);
+        }
+        
+        return spm[run.pageId]->remove(run);
     }
     
     Record SPSegment::lookup(TID tid) {
-        return spm[tid.pageId].lookup(tid);
+        //TID Verweis finden und dann drauf arbeiten
+        TID run = spm[tid.pageId]->getDest(tid);
+        while( spm[run.pageId]->final(run) ) {
+            run = spm[run.pageId]->getDest(run);
+        }
+        
+        return spm[run.pageId]->lookup(run);
     }
     
-    //TBD
+    //TBD Verweisverfolgung bos gefunden
     bool SPSegment::update(TID tid, const Record& r) {
-        //remove(tid);
-        //insert()
+        //Einfuegen
+        TID newTID = insert(r);
+        //TID Verweis finden und dann drauf arbeiten
+        TID run = spm[tid.pageId]->getDest(tid);
+        while( spm[run.pageId]->final(run) ) {
+            run = spm[run.pageId]->getDest(run);
+        }
+        
+        //CreateVerweis
+        spm[run.pageId]->createVerweis(run, newTID);
+        
         return true;
     }

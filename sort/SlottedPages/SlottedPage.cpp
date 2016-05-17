@@ -6,13 +6,14 @@
 #include <cstdlib>
 #include <iostream>
 
-SlottedPage::SlottedPage( BufferManager& bm, uint64_t pageId) : bm(bm), pageId(pageId) {        
-    }
+SlottedPage::SlottedPage( BufferManager& bm, uint64_t pageId) : bm(bm), pageId(pageId) {     
+    newPage = true;
+}
     
-SlottedPage::SlottedPage() {
+/*SlottedPage::SlottedPage() {
     bm = BufferManager(100);
     std::cout << "SlottedPage Constrcutor called ohne Argumente" << std::endl;
-}
+}*/
     
     
 uint64_t SlottedPage::getPageId() {
@@ -21,7 +22,7 @@ uint64_t SlottedPage::getPageId() {
 //Removing all the Spaces from a Page
 void SlottedPage::arrangePage() {
     BufferFrame bf = bm.fixPage(pageId, false); //vll. true?
-    void* data = bf.getData();
+    char* data = (char*)bf.getData();
     
     int moveBack = 0;
     for( int i = 0; i < freeSpaces.size(); i++ ) {
@@ -29,23 +30,31 @@ void SlottedPage::arrangePage() {
         moveBack += freeSpaces[i].length;
     }
     
+    freeSpaces = std::vector<Slot>();
+    
     bm.unfixPage(bf, true);
 }
     
     
 unsigned SlottedPage::insert( const Record& rec ) {
+    std::cout << "Insert SlottedPage" << std::endl;
     BufferFrame bf = bm.fixPage(pageId, false);//vll true?
-    void* data = bf.getData();
+    char* data = (char*)bf.getData();
     
     Header* hdr = (Header*)data;
     
     //Leere Page, initialisierung der Werte
-    if( !hdr->slotCount ) {
+    if( /*!hdr->slotCount*/ newPage == true ) {
+        std::cout << "EMPTY PAGE INITIALISED" << std::endl;
+        newPage = false;
+        hdr->slotCount = 0;
         hdr->firstFreeSlot = sizeof(Header);
         hdr->dataStart = 8*1024;
-        hdr->freeSpace = 8*1024-sizeof(Header);
+        hdr->freeSpace = 8*1024-sizeof(Header)-sizeof(Slot);
         hdr->spaceByArrangement = 0;
     }
+    
+    std::cout << "passed empty page" << std::endl;
     
     
     //Slot management
@@ -61,8 +70,17 @@ unsigned SlottedPage::insert( const Record& rec ) {
     slot->offset = hdr->dataStart;
     slot->length = rec.getLen();
     
+    std::cout << "Before memcpy" << std::endl;
+    std::cout << data << std::endl;
+    std::cout << slot->offset << std::endl;
+    std::cout << data + slot->offset << std::endl;
+    std::cout << rec.getData() << std::endl;
+    std::cout << rec.getLen() << std::endl; 
+    std::cout << "out" << std::endl;
     //CopyData
     memcpy(data+slot->offset, rec.getData(), rec.getLen());
+    
+    std::cout << "Aftermemcpy memcpy" << std::endl;
     
     bm.unfixPage(bf, true);
     
@@ -72,9 +90,12 @@ unsigned SlottedPage::insert( const Record& rec ) {
 //Needs to be improved
 bool SlottedPage::remove(TID tid) {
     BufferFrame bf = bm.fixPage(tid.pageId, false); //vll. true?
-    void* data = bf.getData();
+    char* data = (char*)bf.getData();
+    
+    Header* hdr = (Header*)data;
     
     Slot* s = (Slot*)(data + sizeof(Header)) + tid.slotId;
+    hdr->spaceByArrangement = s->length;
     freeSpaces.push_back(*s);//Save free part so rearrange page later on
     s->offset = 0;
     s->length = 0;
@@ -85,7 +106,7 @@ bool SlottedPage::remove(TID tid) {
 
 Record SlottedPage::lookup( TID tid ) {
     BufferFrame bf = bm.fixPage(tid.pageId, false);
-    void* data = bf.getData();
+    char* data = (char*)bf.getData();
     
     Slot* s = (Slot*)(data + sizeof(Header)) + tid.slotId;
     
@@ -100,4 +121,52 @@ Record SlottedPage::lookup( TID tid ) {
     
     bm.unfixPage(bf, false);
     return Record(rec->getLen(), rec->getData());
+}
+
+
+TID SlottedPage::getDest(TID tid) {
+    BufferFrame bf = bm.fixPage(tid.pageId, false);
+    char* data = (char*)bf.getData();
+    
+    Slot* s = (Slot*)(data + sizeof(Header)) + tid.slotId;
+    //Verweise
+    TID ret(0,0);
+    if( s->length & 0x80000000) {
+        ret = TID(s->offset, s->length & 0x7fffffff);
+    //Gefunden
+    } else {
+        ret = tid;
+    }
+    
+    bm.unfixPage(bf, false);
+    return ret;
+}
+
+bool SlottedPage::final(TID tid) {
+    BufferFrame bf = bm.fixPage(tid.pageId, false);
+    char* data = (char*)bf.getData();
+    
+    Slot* s = (Slot*)(data + sizeof(Header)) + tid.slotId;
+    
+    bool ret = true;
+    //FInal?
+    if( s->length & 0x80000000 ){
+        return false;
+    }
+    
+    bm.unfixPage(bf, false);
+    return ret;
+}
+
+bool SlottedPage::createVerweis(TID tid, TID newTID ) {
+    BufferFrame bf = bm.fixPage(tid.pageId, false);
+    char* data = (char*)bf.getData();
+    
+    Slot* s = (Slot*)(data + sizeof(Header)) + tid.slotId;
+    //Verweise erzeugen
+    s->offset = newTID.pageId;
+    s->length = newTID.slotId | 0x80000000;
+    
+    bm.unfixPage(bf, true);
+    return true;
 }

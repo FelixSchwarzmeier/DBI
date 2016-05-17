@@ -54,12 +54,14 @@ int main(int argc, char** argv) {
    unordered_map<TID, unsigned> values; // TID -> testData entry
    unordered_map<unsigned, unsigned> usage; // pageID -> bytes used within this page
 
+   std::cout << "Setting eveything" << std::endl;
    // Setting everything
    BufferManager bm(100);
    // TODO ...
    SPSegment sp = SPSegment(bm);
    Random64 rnd;
 
+   std::cout << "Insert some records" << std::endl;
    // Insert some records
    for (unsigned i=0; i<maxInserts; ++i) {
       // Select string/record to insert
@@ -82,10 +84,13 @@ int main(int argc, char** argv) {
       assert(values.find(tid)==values.end()); // TIDs should not be overwritten
       values[tid]=r;
       unsigned pageId = extractPage(tid); // extract the pageId from the TID
-      assert(pageId < initialSize); // pageId should be within [0, initialSize)
+      //TBD TODO SHifting of the Pageid my be necessary?!!?
+      std::cout << "From SlottedTest.cpp - PageId is the following " << pageId << std::endl;
+      assert(pageId < initialSize); // pageId should be within [0, initialSize) //WHY?!?!?!
       usage[pageId]+=s.size();
    }
 
+   std::cout << "Lookup and delete some records" << std::endl;
    // Lookup & delete some records
    for (unsigned i=0; i<maxDeletes; ++i) {
       // Select operation
@@ -110,6 +115,7 @@ int main(int argc, char** argv) {
    }
 
    // Update some values ('usage' counter invalid from here on)
+   std::cout << "Update some values" << std::endl;
    for (unsigned i=0; i<maxUpdates; ++i) {
       // Select victim
       TID tid = values.begin()->first;
@@ -124,6 +130,7 @@ int main(int argc, char** argv) {
    }
 
    // Lookups
+   std::cout << "Lookups" << std::endl;
    for (auto p : values) {
       TID tid = p.first;
       const std::string& value = testData[p.second];
