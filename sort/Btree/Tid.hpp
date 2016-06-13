@@ -29,7 +29,10 @@ struct TID {
     uint64_t pageId;
     unsigned slotId;
     
-    
+    TID(){
+        pageId = 0;
+        slotId = 0;
+    };
     
     TID(uint64_t pi, unsigned si) {
         pageId = pi;

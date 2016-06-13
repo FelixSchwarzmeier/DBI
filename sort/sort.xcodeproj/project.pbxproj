@@ -11,6 +11,18 @@
 		A3436D781CD23BCD0063E857 /* test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A3436D761CD23BCD0063E857 /* test.cpp */; };
 		A3436D791CD244B80063E857 /* BufferManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A3436D721CD23A5E0063E857 /* BufferManager.cpp */; };
 		A3436D7A1CD244BF0063E857 /* BufferFrame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A3436D741CD23BA20063E857 /* BufferFrame.cpp */; };
+		A3A07C761CEC7A4200EFA877 /* BufferFrame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A3A07C641CEC7A4200EFA877 /* BufferFrame.cpp */; };
+		A3A07C771CEC7A4200EFA877 /* BufferManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A3A07C671CEC7A4200EFA877 /* BufferManager.cpp */; };
+		A3A07C781CEC7A4200EFA877 /* jens.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A3A07C6A1CEC7A4200EFA877 /* jens.cpp */; };
+		A3A07C791CEC7A4200EFA877 /* Makefile in Sources */ = {isa = PBXBuildFile; fileRef = A3A07C6B1CEC7A4200EFA877 /* Makefile */; };
+		A3A07C7A1CEC7A4200EFA877 /* Record.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A3A07C6C1CEC7A4200EFA877 /* Record.cpp */; };
+		A3A07C7B1CEC7A4200EFA877 /* SlottedPage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A3A07C6F1CEC7A4200EFA877 /* SlottedPage.cpp */; };
+		A3A07C7C1CEC7A4200EFA877 /* slottedTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A3A07C711CEC7A4200EFA877 /* slottedTest.cpp */; };
+		A3A07C7D1CEC7A4200EFA877 /* SPSegment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A3A07C721CEC7A4200EFA877 /* SPSegment.cpp */; };
+		A3A07C7E1CEC7A4200EFA877 /* Tid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A3A07C741CEC7A4200EFA877 /* Tid.cpp */; };
+		A3A07C971CEC89EC00EFA877 /* Btree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A3A07C921CEC89EC00EFA877 /* Btree.cpp */; };
+		A3A07C981CEC89EC00EFA877 /* Makefile in Sources */ = {isa = PBXBuildFile; fileRef = A3A07C941CEC89EC00EFA877 /* Makefile */; };
+		A3A07C991CEC89EC00EFA877 /* test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A3A07C951CEC89EC00EFA877 /* test.cpp */; };
 		A3B4F8D01CC535E20022B423 /* Makefile in Sources */ = {isa = PBXBuildFile; fileRef = A3B4F8CB1CC535E20022B423 /* Makefile */; };
 		A3B4F8D11CC535E20022B423 /* mergesort.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A3B4F8CC1CC535E20022B423 /* mergesort.cpp */; };
 		A3B4F8D21CC535E20022B423 /* test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A3B4F8CE1CC535E20022B423 /* test.cpp */; };
@@ -37,6 +49,32 @@
 		A3436D751CD23BA20063E857 /* BufferFrame.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = BufferFrame.hpp; path = BufferManager/BufferFrame.hpp; sourceTree = "<group>"; };
 		A3436D761CD23BCD0063E857 /* test.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = test.cpp; path = BufferManager/test.cpp; sourceTree = "<group>"; };
 		A3436D771CD23BCD0063E857 /* test.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = test.hpp; path = BufferManager/test.hpp; sourceTree = "<group>"; };
+		A3A07C611CEC7A4200EFA877 /* .DS_Store */ = {isa = PBXFileReference; lastKnownFileType = file; name = .DS_Store; path = SlottedPages/.DS_Store; sourceTree = "<group>"; };
+		A3A07C621CEC7A4200EFA877 /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = .gitignore; path = SlottedPages/.gitignore; sourceTree = "<group>"; };
+		A3A07C631CEC7A4200EFA877 /* 0 */ = {isa = PBXFileReference; lastKnownFileType = file; name = 0; path = SlottedPages/0; sourceTree = "<group>"; };
+		A3A07C641CEC7A4200EFA877 /* BufferFrame.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BufferFrame.cpp; path = SlottedPages/BufferFrame.cpp; sourceTree = "<group>"; };
+		A3A07C651CEC7A4200EFA877 /* BufferFrame.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = BufferFrame.hpp; path = SlottedPages/BufferFrame.hpp; sourceTree = "<group>"; };
+		A3A07C661CEC7A4200EFA877 /* BufferManager */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; name = BufferManager; path = SlottedPages/BufferManager; sourceTree = "<group>"; };
+		A3A07C671CEC7A4200EFA877 /* BufferManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BufferManager.cpp; path = SlottedPages/BufferManager.cpp; sourceTree = "<group>"; };
+		A3A07C681CEC7A4200EFA877 /* BufferManager.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = BufferManager.hpp; path = SlottedPages/BufferManager.hpp; sourceTree = "<group>"; };
+		A3A07C691CEC7A4200EFA877 /* DBMS.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = DBMS.hpp; path = SlottedPages/DBMS.hpp; sourceTree = "<group>"; };
+		A3A07C6A1CEC7A4200EFA877 /* jens.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = jens.cpp; path = SlottedPages/jens.cpp; sourceTree = "<group>"; };
+		A3A07C6B1CEC7A4200EFA877 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; name = Makefile; path = SlottedPages/Makefile; sourceTree = "<group>"; };
+		A3A07C6C1CEC7A4200EFA877 /* Record.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Record.cpp; path = SlottedPages/Record.cpp; sourceTree = "<group>"; };
+		A3A07C6D1CEC7A4200EFA877 /* Record.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Record.hpp; path = SlottedPages/Record.hpp; sourceTree = "<group>"; };
+		A3A07C6E1CEC7A4200EFA877 /* Relation.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Relation.hpp; path = SlottedPages/Relation.hpp; sourceTree = "<group>"; };
+		A3A07C6F1CEC7A4200EFA877 /* SlottedPage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SlottedPage.cpp; path = SlottedPages/SlottedPage.cpp; sourceTree = "<group>"; };
+		A3A07C701CEC7A4200EFA877 /* SlottedPage.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = SlottedPage.hpp; path = SlottedPages/SlottedPage.hpp; sourceTree = "<group>"; };
+		A3A07C711CEC7A4200EFA877 /* slottedTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = slottedTest.cpp; path = SlottedPages/slottedTest.cpp; sourceTree = "<group>"; };
+		A3A07C721CEC7A4200EFA877 /* SPSegment.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SPSegment.cpp; path = SlottedPages/SPSegment.cpp; sourceTree = "<group>"; };
+		A3A07C731CEC7A4200EFA877 /* SPSegment.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = SPSegment.hpp; path = SlottedPages/SPSegment.hpp; sourceTree = "<group>"; };
+		A3A07C741CEC7A4200EFA877 /* Tid.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Tid.cpp; path = SlottedPages/Tid.cpp; sourceTree = "<group>"; };
+		A3A07C751CEC7A4200EFA877 /* Tid.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Tid.hpp; path = SlottedPages/Tid.hpp; sourceTree = "<group>"; };
+		A3A07C921CEC89EC00EFA877 /* Btree.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Btree.cpp; path = Btree/Btree.cpp; sourceTree = "<group>"; };
+		A3A07C931CEC89EC00EFA877 /* Btree.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Btree.hpp; path = Btree/Btree.hpp; sourceTree = "<group>"; };
+		A3A07C941CEC89EC00EFA877 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; name = Makefile; path = Btree/Makefile; sourceTree = "<group>"; };
+		A3A07C951CEC89EC00EFA877 /* test.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = test.cpp; path = Btree/test.cpp; sourceTree = "<group>"; };
+		A3A07C961CEC89EC00EFA877 /* test.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = test.hpp; path = Btree/test.hpp; sourceTree = "<group>"; };
 		A3B4F8C11CC535AB0022B423 /* sort */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = sort; sourceTree = BUILT_PRODUCTS_DIR; };
 		A3B4F8CB1CC535E20022B423 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		A3B4F8CC1CC535E20022B423 /* mergesort.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mergesort.cpp; sourceTree = "<group>"; };
@@ -72,9 +110,51 @@
 			name = BufferManager;
 			sourceTree = "<group>";
 		};
+		A3A07C601CEC7A2400EFA877 /* SlottedPages */ = {
+			isa = PBXGroup;
+			children = (
+				A3A07C611CEC7A4200EFA877 /* .DS_Store */,
+				A3A07C621CEC7A4200EFA877 /* .gitignore */,
+				A3A07C631CEC7A4200EFA877 /* 0 */,
+				A3A07C641CEC7A4200EFA877 /* BufferFrame.cpp */,
+				A3A07C651CEC7A4200EFA877 /* BufferFrame.hpp */,
+				A3A07C661CEC7A4200EFA877 /* BufferManager */,
+				A3A07C671CEC7A4200EFA877 /* BufferManager.cpp */,
+				A3A07C681CEC7A4200EFA877 /* BufferManager.hpp */,
+				A3A07C691CEC7A4200EFA877 /* DBMS.hpp */,
+				A3A07C6A1CEC7A4200EFA877 /* jens.cpp */,
+				A3A07C6B1CEC7A4200EFA877 /* Makefile */,
+				A3A07C6C1CEC7A4200EFA877 /* Record.cpp */,
+				A3A07C6D1CEC7A4200EFA877 /* Record.hpp */,
+				A3A07C6E1CEC7A4200EFA877 /* Relation.hpp */,
+				A3A07C6F1CEC7A4200EFA877 /* SlottedPage.cpp */,
+				A3A07C701CEC7A4200EFA877 /* SlottedPage.hpp */,
+				A3A07C711CEC7A4200EFA877 /* slottedTest.cpp */,
+				A3A07C721CEC7A4200EFA877 /* SPSegment.cpp */,
+				A3A07C731CEC7A4200EFA877 /* SPSegment.hpp */,
+				A3A07C741CEC7A4200EFA877 /* Tid.cpp */,
+				A3A07C751CEC7A4200EFA877 /* Tid.hpp */,
+			);
+			name = SlottedPages;
+			sourceTree = "<group>";
+		};
+		A3A07C7F1CEC7B0100EFA877 /* bPlusTree */ = {
+			isa = PBXGroup;
+			children = (
+				A3A07C921CEC89EC00EFA877 /* Btree.cpp */,
+				A3A07C931CEC89EC00EFA877 /* Btree.hpp */,
+				A3A07C941CEC89EC00EFA877 /* Makefile */,
+				A3A07C951CEC89EC00EFA877 /* test.cpp */,
+				A3A07C961CEC89EC00EFA877 /* test.hpp */,
+			);
+			name = bPlusTree;
+			sourceTree = "<group>";
+		};
 		A3B4F8B81CC535AB0022B423 = {
 			isa = PBXGroup;
 			children = (
+				A3A07C7F1CEC7B0100EFA877 /* bPlusTree */,
+				A3A07C601CEC7A2400EFA877 /* SlottedPages */,
 				A3DB8F641CD79AF80097AE03 /* bla.cpp */,
 				A3DB8F651CD79AF80097AE03 /* bla.hpp */,
 				A3436D711CD238920063E857 /* BufferManager */,
@@ -159,13 +239,25 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A3A07C971CEC89EC00EFA877 /* Btree.cpp in Sources */,
 				A3B4F8D01CC535E20022B423 /* Makefile in Sources */,
+				A3A07C771CEC7A4200EFA877 /* BufferManager.cpp in Sources */,
 				A3436D791CD244B80063E857 /* BufferManager.cpp in Sources */,
+				A3A07C981CEC89EC00EFA877 /* Makefile in Sources */,
+				A3A07C7E1CEC7A4200EFA877 /* Tid.cpp in Sources */,
 				A3436D781CD23BCD0063E857 /* test.cpp in Sources */,
+				A3A07C7D1CEC7A4200EFA877 /* SPSegment.cpp in Sources */,
+				A3A07C7B1CEC7A4200EFA877 /* SlottedPage.cpp in Sources */,
+				A3A07C761CEC7A4200EFA877 /* BufferFrame.cpp in Sources */,
 				A3436D7A1CD244BF0063E857 /* BufferFrame.cpp in Sources */,
+				A3A07C791CEC7A4200EFA877 /* Makefile in Sources */,
 				A3B4F8D21CC535E20022B423 /* test.cpp in Sources */,
+				A3A07C991CEC89EC00EFA877 /* test.cpp in Sources */,
 				A3251E431CD629A800ACE909 /* Makefile in Sources */,
+				A3A07C7A1CEC7A4200EFA877 /* Record.cpp in Sources */,
 				A3B4F8D11CC535E20022B423 /* mergesort.cpp in Sources */,
+				A3A07C781CEC7A4200EFA877 /* jens.cpp in Sources */,
+				A3A07C7C1CEC7A4200EFA877 /* slottedTest.cpp in Sources */,
 				A3DB8F661CD79AF80097AE03 /* bla.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
