@@ -6,6 +6,8 @@
 #include <vector>
 #include <queue>
 #include <unordered_map>
+#include <string>
+#include <algorithm>
 
 class HashJoin : public Operator {
 private:
@@ -16,12 +18,12 @@ private:
     
     
     std::vector<Register> ret;
-    std::queue<std::vector<Register>> buffer;
+    std::queue<std::vector<Register>> queue;
     
     std::unordered_multimap<Register, std::vector<Register>> small_table;
     
-pulic:
-    HashJoin( Operator* _op1; unsigned _col1, Operator* _op2, unsigned _col2 );
+public:
+    HashJoin( Operator* _op1, unsigned _col1, Operator* _op2, unsigned _col2 );
     
     void open();
     bool next();

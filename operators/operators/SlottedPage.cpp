@@ -25,7 +25,7 @@ void SlottedPage::arrangePage() {
     char* data = (char*)bf.getData();
     
     int moveBack = 0;
-    for( int i = 0; i < freeSpaces.size(); i++ ) {
+    for( unsigned i = 0; i < freeSpaces.size(); i++ ) {
         memcpy(data + freeSpaces[i].offset + freeSpaces[i].length - moveBack, data + freeSpaces[i].offset - moveBack, 8*1024-freeSpaces[i].offset);
         moveBack += freeSpaces[i].length;
     }
@@ -172,5 +172,9 @@ bool SlottedPage::createVerweis(TID tid, TID newTID ) {
 }
 
 unsigned SlottedPage::get_numSlots() {
+    BufferFrame bf = bm.fixPage(pageId, false);
+    char* data = (char*)bf.getData();
+    unsigned slotCount = ((Header*)data)->slotCount;
+    bm.unfixPage(bf, true);
     return slotCount;
 }

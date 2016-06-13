@@ -16,13 +16,13 @@
 
 int main(int argc, char* argv[]) {
     BufferManager bm(100);
-    SPSegment sps(&bm);
+    SPSegment sps(bm);
     Relation rel(&sps);
     rel.addColumn(false, 4);//zahl 4 byte
     rel.addColumn(true, 12);// cstring 12 byte
     
     
-    TableScan(&rel);
+    TableScan TS(&rel);
     //tbd
     
     return 0;

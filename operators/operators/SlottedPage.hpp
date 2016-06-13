@@ -30,8 +30,8 @@ class SlottedPage {
 private:
     bool newPage;
     
+    BufferManager& bm;
     uint64_t pageId;
-    BufferManager bm;
     
     std::vector<Slot> freeSpaces;
     

@@ -14,19 +14,18 @@ private:
     
 public:
     
-    bool is_num();
+    bool is_num() const;
     
-    std::string& getString();
-    int getInteger();
+    std::string getString() const;
+    int getInteger() const;
     
     void setInteger( int i);
     void setString(const std::string& s);
     
-    bool operator==(Register& r);
+    bool operator==(const Register& r) const;
     
     Register( int i );
     Register( std::string i );
-    Register();
     
     
 };

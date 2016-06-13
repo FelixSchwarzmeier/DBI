@@ -10,16 +10,16 @@ Register::Register( std::string i) {
     str = i;;
 }
 
-bool Register::is_num() {
+bool Register::is_num() const {
     return zahl;
 }
 
 
-std::string& Register::getString() {
+std::string Register::getString() const {
     return str;
 }
 
-int Register::getInteger() {
+int Register::getInteger() const {
     return num;
 }
 
@@ -35,7 +35,7 @@ void Register::setString(const std::string& s) {
     str = s;
 }
 
-bool Register::operator==(Register& r) {
+bool Register::operator==(const Register& r) const {
     return num == r.getInteger() && str.compare(r.getString()) == 0;
 }
 

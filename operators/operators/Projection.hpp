@@ -3,15 +3,20 @@
 
 
 #include "Operator.hpp"
+#include <vector>
 
-
-class Projection : class Operator {
+class Projection : public Operator {
 private: 
     Operator* op;
-    vector<unsigned int> col_id;
-    vector<Register> ret;
+    std::vector<unsigned int> col_id;
+    std::vector<Register> ret;
 public:
-    Projection( vector<unsigned int> _col_id, Operator* _op);
+    Projection( std::vector<unsigned int> _col_id, Operator* _op);
+    
+    void open();
+    bool next();
+    std::vector<Register> getOutput();
+    void close();
     
 };
 

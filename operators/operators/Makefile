@@ -8,7 +8,7 @@ OBJECTS = $(SOURCES:.cpp=.o)
 LDFLAGS = -pthread -lpthread
 
 
-Btree: $(OBJECTS)
+Operators: $(OBJECTS)
 	g++ -Wall $(LDFLAGS) $(OBJECTS) -o Operators
 
 %.o: %.cpp $(HEADERS)
