@@ -4,14 +4,21 @@
 
 #include "Operator.hpp"
 #include "SPSegment.hpp"
+#include "Relation.hpp"
 
-class TableScan : class Operator {
+class TableScan : public Operator {
 private:
-    SPSegment sps;
+    SPSegment* sps;
+    Relation* rel;
     TID t;
     TID current;
-pulic:
-    TableScan( SPSegment* _sps );
+public:
+    TableScan( Relation* rel );
+    
+    void open();
+    bool next();
+    std::vector<Register> getOutput();
+    void close();
     
 };
 

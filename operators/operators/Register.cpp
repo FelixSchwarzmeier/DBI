@@ -1,11 +1,21 @@
 #include "Register.hpp"
 
+Register::Register( int i) {
+    zahl = true;
+    num = i;
+}
+
+Register::Register( std::string i) {
+    zahl = false;
+    str = i;;
+}
+
 bool Register::is_num() {
     return zahl;
 }
 
 
-string& Register::getString() {
+std::string& Register::getString() {
     return str;
 }
 
@@ -13,19 +23,19 @@ int Register::getInteger() {
     return num;
 }
 
-void setInteger( int i) {
+void Register::setInteger( int i) {
     zahl = true;
     str = "";
     num = i;
     
 }
-void setString(const string& s) {
+void Register::setString(const std::string& s) {
     zahl = false;
-    i = 0;
+    num = 0;
     str = s;
 }
 
-bool operator==(Register& r) {
+bool Register::operator==(Register& r) {
     return num == r.getInteger() && str.compare(r.getString()) == 0;
 }
 

@@ -3,24 +3,18 @@
 
 #include "Register.hpp"
 
+#include <vector>
+
 class Operator {
     
 public:
     virtual void open();
     virtual bool next();
-    virtual vector<Register> getOutput();
+    virtual std::vector<Register> getOutput();
     virtual void close();
     
 };
 
-
-
-
-
-
-class HashJoin: class Operator {
-    
-};
 
 
 #endif

@@ -3,16 +3,24 @@
 
 
 #include "Operator.hpp"
+#include <vector>
+#include "Register.hpp"
 
+class Select : public Operator {
 
-class Select : class Operator {
 private:
+    Operator* op;
     Register sel;
     unsigned int col_id;
-    vector<Register> ret;
+    std::vector<Register> ret;
     
 public:
-    Select( const Register sel, * _op);
+    Select( const Register _sel, unsigned int _col_id, Operator* _op);
+    
+    void open();
+    bool next();
+    std::vector<Register> getOutput();
+    void close();
 };
 
 #endif

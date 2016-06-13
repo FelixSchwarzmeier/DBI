@@ -3,13 +3,19 @@
 
 
 #include "Operator.hpp"
+#include <vector>
+#include <iostream>
 
-
-class Print : class Operator {
+class Print : public Operator {
 private:
-    operator* op;
+    Operator* op;
 public:
     Print( Operator* _op );
+    
+    void open();
+    bool next();
+    std::vector<Register> getOutput();
+    void close();
     
 };
 

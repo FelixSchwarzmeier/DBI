@@ -1,4 +1,4 @@
-#include "hashjoin.hpp"
+#include "Hashjoin.hpp"
 
 Hashjoin::HashJoin( Operator* _op1; unsigned _col1, Operator* _op2, unsigned _col2 ) {
     op1 = _op1;
@@ -8,17 +8,17 @@ Hashjoin::HashJoin( Operator* _op1; unsigned _col1, Operator* _op2, unsigned _co
     
 }
 
-void Hashjoin::open() {
+void HashJoin::open() {
     //Hashmap der kleinere Relation bauen
     bool has_next = op1.next();
     while ( has_next ) {
-        vector<Register> ret = op1->getOutput();
-        small_table.insert( std::make_pair<Register, vector<Register>>(ret[col1], ret));
+        std::vector<Register> ret = op1->getOutput();
+        small_table.insert( std::make_pair<Register, std::vector<Register>>(ret[col1], ret));
         op1.next();
     }
 }
 
-bool Hashjoin::next() {
+bool HashJoin::next() {
     
     if( queue.empty() ) {
         //Nächste Zeile der Spalte und Ausgabe dieser
@@ -38,18 +38,20 @@ bool Hashjoin::next() {
         
         ret = queue.front();
         queue.pop();
+        return has_next;
 
     } else {
         //gepufferte Werte die noch ausgegeben werden müssen
         ret = queue.front();
         queue.pop();
+        return true;
     }
 }
 
-vector<Register> Hashjoin::getOutput() {    
+std::vector<Register> HashJoin::getOutput() {    
     return ret;
 }
 
-void Hashjoin::close() {
+void HashJoin::close() {
     //close notwendig?
 }

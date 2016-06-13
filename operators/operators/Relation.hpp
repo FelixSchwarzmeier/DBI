@@ -2,6 +2,9 @@
 #define RELATION_hpp
 
 #include <stdio.h>
+#include <vector>
+
+#include "SPSegment.hpp"
 
 struct metadata {
     bool string;
@@ -17,14 +20,17 @@ struct metadata {
 class Relation {
 private:
     SPSegment* sps;
-    vector<metadata> columns;
-    unsigned total_len;
+    std::vector<metadata> columns;
     
 public:
-    Relation( SPSegments _sps );
-    addColumn( bool string, unsigned len);
+    Relation( SPSegment* _sps );
+    void addColumn( bool string, unsigned len);
     
-}
+    SPSegment* getSPSegment();
+    unsigned getColumns();
+    metadata getColumn(int i);
+    
+};
 
 
 

@@ -6,18 +6,18 @@ Print::Print(Operator* _op) {
 
 
 void Print::open() {
-    op.open();
+    op->open();
 }
 
 bool Print::next() {
     //ausgeben
     
-    bool has_next = op.next();
+    bool has_next = op->next();
     
     if( has_next ) {
-        vector<Register> output = op.getOutput();
+        std::vector<Register> output = op->getOutput();
         
-        for( int i = 0; i < output.size(); i++ ) {
+        for( unsigned i = 0; i < output.size(); i++ ) {
             if(output[i].is_num()) {
                 std::cout << output[i].getInteger() << std::endl;
             } else {
@@ -25,12 +25,14 @@ bool Print::next() {
             }
         }        
     }
+    
+    return has_next;
 }
 
-vector<Register> Print::getOutput() {
-    op.getOutput();
+std::vector<Register> Print::getOutput() {
+    return op->getOutput();
 }
 
 void Print::close() {
-    op.close();
+    op->close();
 }

@@ -1,34 +1,34 @@
 #include "Select.hpp"
 
 
-Select::Select( const Register _sel, unsigned int _col_id, Operator* _op) {
+Select::Select( Register _sel, unsigned int _col_id, Operator* _op) : sel(_sel){
     col_id = _col_id;
-    sel = _sel;
     op = _op;
 }
 
 void Select::open() {
-    op.open();
+    op->open();
 }
 
 bool Select::next() {
-    bool has_next = op.next();
+    bool has_next = op->next();
     
     if( has_next  ) {
-        ret = op.getOutput();
+        ret = op->getOutput();
         
-        while( ret[col_id] != sel && has_next ) {
-            has_next = op.next();
-            ret = op.getOutput();
+        while( !(ret[col_id] == sel) && has_next ) {
+            has_next = op->next();
+            ret = op->getOutput();
         }
     }
+    return has_next;
 }
 
-vector<Register> Select::getOutput() {
+std::vector<Register> Select::getOutput() {
     return ret;
 }
 
 void Select::close() {
-    op.close();
+    op->close();
 }
 
